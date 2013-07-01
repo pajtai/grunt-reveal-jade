@@ -18,6 +18,20 @@ module.exports = function(grunt) {
                     "index.html": ["index.jade"]
                 }
             }
+        },
+
+        watch: {
+
+            jade: {
+                files: ['slides/*.jade'],
+                tasks: ['jade'],
+                option: {
+                    // Start a live reload server on the default port: 35729
+                    livereload: true
+                }
+            }
         }
     });
+
+    grunt.registerTask("server", "Build and watch task", ["jade", "watch:jade"]);
 };
