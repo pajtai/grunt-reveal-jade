@@ -11,7 +11,9 @@ module.exports = function(grunt) {
             compile: {
                 options: {
                     data: {
-                        debug: false
+                        debug: false,
+                        // TODO: put this into a flag
+                        watchTask: true
                     }
                 },
                 files: {
@@ -21,11 +23,14 @@ module.exports = function(grunt) {
         },
 
         watch: {
-
+            options: {
+                // Start a live reload server on the default port: 35729
+                livereload: true
+            },
             jade: {
                 files: ['slides/*.jade'],
                 tasks: ['jade'],
-                option: {
+                options: {
                     // Start a live reload server on the default port: 35729
                     livereload: true
                 }
