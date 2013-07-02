@@ -1,5 +1,5 @@
-# Build Automation
+# grunt-reveal-jade
 
-[**Slideshow**](http://pajtai.github.com/buildAutomation/#/) about Build Automation at [SOLID Interactive](http://www.thinksolid.com/)
+Use server side [Jade templates](http://jade-lang.com/) to create [Reveal.js](http://lab.hakim.se/reveal-js/) slideshows
+using [Grunt](http://gruntjs.com/)
 
-content by Peter Ajtai. slide show by Hakim El Hattab's [Reveal.js](http://lab.hakim.se/reveal-js/)
