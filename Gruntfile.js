@@ -35,8 +35,25 @@ module.exports = function(grunt) {
                     livereload: true
                 }
             }
+        },
+
+        connect : {
+            livereload : {
+                options : {
+                    port       : 9001,
+                    hostname: 'localhost',
+                    base       : './'
+                    // TODO: could use middleware instead of templating to include lr script
+                }
+            }
+        },
+
+        open : {
+            reload : {
+                path : 'http://0.0.0.0:9001/'
+            }
         }
     });
 
-    grunt.registerTask("server", "Build and watch task", ["jade", "watch:jade"]);
+    grunt.registerTask("server", "Build and watch task", ["jade", "connect:livereload", "open:reload", "watch:jade"]);
 };
