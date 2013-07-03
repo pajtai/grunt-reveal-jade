@@ -4,13 +4,17 @@ var fs = require("fs");
 
 module.exports = function(grunt) {
 
-    var index = fs.readFileSync("app/public/index.html").toString();
-
-    grunt.registerTask("revealJade", "Turn Jade templates into RevelJS slides", function() {
+    grunt.registerMultiTask("reveal", "Turn Jade templates into RevelJS slides", function() {
 
         var _ = grunt.util._,
-            template = _.template(grunt.file.read("../index.jade"));
+            template = _.template(grunt.file.read("index.jade")),
+            options = this.options({
+                slides: "slides/slides.jade",
+                build: "build"
+            });
 
-        template(grunt.config.get());
+        grunt.log.subhead(template({slides:options.slides}));
+        grunt.config.set("reveal.instance.build", options.build);
+
     });
 }

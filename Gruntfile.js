@@ -1,6 +1,7 @@
 /*global module:false*/
 module.exports = function(grunt) {
 
+    grunt.loadTasks('tasks');
     // load all grunt tasks
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -10,9 +11,16 @@ module.exports = function(grunt) {
         reveal: {
 
             livereload: {
+                slides:"test/slides.jade"
+            }
+        },
 
-                options: {
-                    slides: "test/slides.jade"
+        shell : {
+            mkDirs         : {
+                command : "mkdir <%=revaal.instance.build%>",
+                options : {
+                    stdout : true,
+                    stderr : true
                 }
             }
         },
@@ -40,7 +48,7 @@ module.exports = function(grunt) {
             },
             jade: {
                 files: ['slides/*.jade'],
-                tasks: ['jade'],
+                tasks: ['jade']
             }
         },
 
@@ -50,7 +58,6 @@ module.exports = function(grunt) {
                     port       : 9001,
                     hostname: 'localhost',
                     base       : './'
-                    // TODO: could use middleware instead of templating to include lr script
                 }
             }
         },
