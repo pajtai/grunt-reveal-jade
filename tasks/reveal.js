@@ -36,7 +36,8 @@ module.exports = function(grunt) {
 
         if (grunt.file.isDir(options.build) && options.cleanBuild) {
 
-            grunt.task.run("reveal-deleteBuild");
+            // TODO: this is causing problems
+            //grunt.task.run("reveal-deleteBuild");
         }
 
         grunt.file.write(options.temp + "/index.jade", slides);
