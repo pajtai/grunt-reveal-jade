@@ -23,39 +23,36 @@ module.exports = function(grunt) {
         // TODO: normalize file paths
         grunt.file.write(options.temp + "/index.jade", slides);
 
-        copyModuleDirectoriesToTemp();
+        copyModuleDirectories(["templates"], options.temp);
+        copyModuleDirectories(["css", "img", "js", "lib"], options.build);
         copySlidesToTempDir();
         createBuild();
 
-        function copyModuleDirectoriesToTemp() {
+        function copyModuleDirectories(moduleDirectories, destinationDirectory) {
 
-            var directories = ["css", "img", "js", "templates", "lib"];
-            _.forEach(directories, function(dir) {
+            _.forEach(moduleDirectories, function(directory) {
 
-                grunt.file.recurse(localRoot + dir, copyDirectoryToTemp.bind({ dir: dir }));
+                grunt.file.recurse(localRoot + directory, copyFiles.bind({ mainDir: destinationDirectory, dir: directory }));
             });
         }
 
         function copySlidesToTempDir() {
 
-            grunt.file.recurse(options.slides, copyDirectoryToTemp.bind({ dir: options.slides }));
+            grunt.file.recurse(options.slides, copyFiles.bind({ dir: options.slides, mainDir: options.temp }));
 
         }
 
-        function copyDirectoryToTemp(filepath, rootdir, subdir, filename) {
-
-            copyFiles(filepath, filename, this.dir, subdir);
-        }
-
-        function copyFiles(filepath, filename, directory, subdir) {
-            grunt.file.copy(filepath, options.temp + "/" + directory + "/" + subdir + "/" + filename);
+        function copyFiles(filepath, rootDir, subdir, filename) {
+            grunt.file.copy(filepath, this.mainDir + "/" + this.dir + "/" + (subdir ? subdir + "/" : "") + filename);
         }
 
         function createBuild() {
 
-            grunt.config.set("jade.compile.files",{
-                "temp/index.html": ["temp/index.jade"]
-            });
+            var files = {};
+
+            files[options.build + "/index.html"] = options.temp + "/index.jade"
+
+            grunt.config.set("jade.compile.files", files);
             grunt.log.writeln(JSON.stringify(grunt.config.get("jade.compile.files")));
             grunt.log.writeln(JSON.stringify(grunt.config.get("reveal")));
             grunt.task.run("jade");
