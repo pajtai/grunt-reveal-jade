@@ -2,7 +2,8 @@
 
 module.exports = function(grunt) {
 
-    var fs = require("fs");
+    var fs = require("fs"),
+        options;
 
     grunt.loadNpmTasks('grunt-reveal-jade/node_modules/grunt-contrib-jade');
 
@@ -12,21 +13,39 @@ module.exports = function(grunt) {
         var _ = grunt.util._,
             localRoot = __dirname + "/../",
             index = fs.readFileSync(localRoot + "index.jade").toString(),
+            slides;
+
             options = this.options({
                 slides: "slides",
                 build: "build",
-                temp: "temp"
-            }),
+                temp: "temp",
+                cleanBuild: true
+            });
             // The jade file we use to create the slide show
             slides = _.template(index, {slides:options.slides + "/slides.jade"});
 
+        grunt.registerTask("reveal-deleteTemp", "helper task that helps keeps things synchronous", function() {
+            deleteDir(options.temp);
+        });
+
+        grunt.registerTask("reveal-deleteBuild", "helper task that helps keeps things synchronous", function() {
+            deleteDir(options.build);
+        });
+
         // TODO: normalize file paths
+
+        if (grunt.file.isDir(options.build) && options.cleanBuild) {
+
+            grunt.task.run("reveal-deleteBuild");
+        }
+
         grunt.file.write(options.temp + "/index.jade", slides);
 
         copyModuleDirectories(["templates"], options.temp);
         copyModuleDirectories(["css", "img", "js", "lib"], options.build);
         copySlidesToTempDir();
         createBuild();
+        grunt.task.run("reveal-deleteTemp");
 
         function copyModuleDirectories(moduleDirectories, destinationDirectory) {
 
@@ -53,9 +72,11 @@ module.exports = function(grunt) {
             files[options.build + "/index.html"] = options.temp + "/index.jade"
 
             grunt.config.set("jade.compile.files", files);
-            grunt.log.writeln(JSON.stringify(grunt.config.get("jade.compile.files")));
-            grunt.log.writeln(JSON.stringify(grunt.config.get("reveal")));
             grunt.task.run("jade");
+        }
+
+        function deleteDir(directory) {
+            grunt.file.delete(directory);
         }
 
     });
