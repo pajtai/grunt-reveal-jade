@@ -3,6 +3,7 @@
 module.exports = function(grunt) {
 
     // TODO: normalize file paths
+    // TODO: add in option for assets directory
     // __dirname is the current directory
     var _ = grunt.util._,
         localRoot = __dirname + "/../",
@@ -63,7 +64,7 @@ module.exports = function(grunt) {
         grunt.file.write(options.temp + "/index.jade", slides);
 
         copyModuleDirectories(["templates"], options.temp);
-        copyModuleDirectories(["css", "img", "js", "lib"], options.build);
+        copyModuleDirectories(["css", "js", "lib"], options.build, "reveal");
         copySlidesToTempDir();
         createBuild();
     });
@@ -114,11 +115,11 @@ module.exports = function(grunt) {
 
     // Helper methods -----------------------------------------------------------------
 
-    function copyModuleDirectories(moduleDirectories, destinationDirectory) {
+    function copyModuleDirectories(moduleDirectories, destinationDirectory, targetDirectory) {
 
         _.forEach(moduleDirectories, function(directory) {
 
-            grunt.file.recurse(localRoot + directory, copyFiles.bind({ mainDir: destinationDirectory, dir: directory }));
+            grunt.file.recurse(localRoot + (targetDirectory ? targetDirectory + "/" : "") + directory, copyFiles.bind({ mainDir: destinationDirectory, dir: directory }));
         });
     }
 

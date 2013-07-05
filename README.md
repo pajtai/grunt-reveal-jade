@@ -1,7 +1,11 @@
 # grunt-reveal-jade
 
 Use server side [Jade templates](http://jade-lang.com/) to create [Reveal.js](http://lab.hakim.se/reveal-js/) slideshows
-using [Grunt](http://gruntjs.com/)
+using [Grunt](http://gruntjs.com/).
+
+The idea is that all you have to include is `grunt-reveal-jade` as a dependency, and you can
+simply create slides in a Jade file, livereload as you edit, and pick themes (and down the
+road other Reveal options) in your Gruntfile.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1`
@@ -54,6 +58,9 @@ deleted before the completion of the build task.
 * `cleanBuild`: a boolean indicating whether the build directory should be deleted before
 a new build.
     * default: `"true"`
+* `livereload`: a boolean indicating whether you want slideshow to be served to
+[http://localhost:9001](http://localhost:9001), auto opened, and live reloaded upon changes
+to the slides or the Gruntfile.
 
 ### Usage Examples
 
