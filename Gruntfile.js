@@ -15,32 +15,6 @@ module.exports = function(grunt) {
             }
         },
 
-        shell : {
-            mkDirs         : {
-                command : "mkdir <%=revaal.instance.build%>",
-                options : {
-                    stdout : true,
-                    stderr : true
-                }
-            }
-        },
-
-        jade: {
-            compile: {
-                options: {
-                    data: {
-                        debug: false,
-                        // TODO: put this into a flag
-                        watchTask: true,
-                        slides: [ "test/slides" ]
-                    }
-                },
-                files: {
-                    "index.html": ["index.jade"]
-                }
-            }
-        },
-
         watch: {
             options: {
                 // Start a live reload server on the default port: 35729

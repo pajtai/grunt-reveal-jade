@@ -2,18 +2,22 @@
 
 module.exports = function(grunt) {
 
-    var fs = require("fs"),
-        options;
+    // __dirname is the current directory
+    var _ = grunt.util._,
+        localRoot = __dirname + "/../",
+        fs = require("fs"),
+        index = fs.readFileSync(localRoot + "index.jade").toString(),
+        options,
+        slides;
 
     grunt.loadNpmTasks('grunt-reveal-jade/node_modules/grunt-contrib-jade');
+    grunt.loadNpmTasks('grunt-reveal-jade/node_modules/grunt-contrib-watch');
 
-    grunt.registerMultiTask("reveal", "Turn Jade templates into RevelJS slides", function() {
+    registerGruntTasks();
 
-        // __dirname is the current directory
-        var _ = grunt.util._,
-            localRoot = __dirname + "/../",
-            index = fs.readFileSync(localRoot + "index.jade").toString(),
-            slides;
+    function registerGruntTasks() {
+
+        grunt.registerMultiTask("reveal", "Turn Jade templates into RevelJS slides", function() {
 
             options = this.options({
                 slides: "slides",
@@ -24,61 +28,88 @@ module.exports = function(grunt) {
             // The jade file we use to create the slide show
             slides = _.template(index, {slides:options.slides + "/slides.jade"});
 
-        grunt.registerTask("reveal-deleteTemp", "helper task that helps keeps things synchronous", function() {
+            // TODO: normalize file paths
+            if (grunt.file.isDir(options.build) && options.cleanBuild) {
+
+                grunt.task.run("reveal-deleteBuild");
+            }
+            grunt.task.run("reveal-createBuild");
+            grunt.task.run("reveal-deleteTemp");
+            grunt.task.run("reveal-beginWatch");
+
+        });
+
+        // Creating a series of tasks and running them is the easiest way to handle
+        // async things running in series
+        grunt.registerTask("reveal-deleteTemp", function() {
             deleteDir(options.temp);
         });
 
-        grunt.registerTask("reveal-deleteBuild", "helper task that helps keeps things synchronous", function() {
+        grunt.registerTask("reveal-deleteBuild", function() {
             deleteDir(options.build);
         });
 
-        // TODO: normalize file paths
+        grunt.registerTask("reveal-createBuild", function() {
 
-        if (grunt.file.isDir(options.build) && options.cleanBuild) {
+            grunt.file.write(options.temp + "/index.jade", slides);
 
-            // TODO: this is causing problems
-            //grunt.task.run("reveal-deleteBuild");
-        }
+            copyModuleDirectories(["templates"], options.temp);
+            copyModuleDirectories(["css", "img", "js", "lib"], options.build);
+            copySlidesToTempDir();
+            createBuild();
+        });
 
-        grunt.file.write(options.temp + "/index.jade", slides);
+        grunt.registerTask("reveal-beginWatch", function() {
 
-        copyModuleDirectories(["templates"], options.temp);
-        copyModuleDirectories(["css", "img", "js", "lib"], options.build);
-        copySlidesToTempDir();
-        createBuild();
-        grunt.task.run("reveal-deleteTemp");
+            var watch = {
+                options: {
+                    // Start a live reload server on the default port: 35729
+                    livereload: true,
+                    nospawn: true
+                },
+                jade: {
+                    files: [options.slides + '/*.jade'],
+                    tasks: ["reveal-createBuild", "reveal-deleteTemp"]
+                }
+            };
 
-        function copyModuleDirectories(moduleDirectories, destinationDirectory) {
+            grunt.config.set("reveal-createBuild", {});
+            grunt.config.set("watch", watch);
+            grunt.task.run("watch");
+        });
+    }
 
-            _.forEach(moduleDirectories, function(directory) {
+    // Helper methods -----------------------------------------------------------------
 
-                grunt.file.recurse(localRoot + directory, copyFiles.bind({ mainDir: destinationDirectory, dir: directory }));
-            });
-        }
+    function copyModuleDirectories(moduleDirectories, destinationDirectory) {
 
-        function copySlidesToTempDir() {
+        _.forEach(moduleDirectories, function(directory) {
 
-            grunt.file.recurse(options.slides, copyFiles.bind({ dir: options.slides, mainDir: options.temp }));
+            grunt.file.recurse(localRoot + directory, copyFiles.bind({ mainDir: destinationDirectory, dir: directory }));
+        });
+    }
 
-        }
+    function copySlidesToTempDir() {
 
-        function copyFiles(filepath, rootDir, subdir, filename) {
-            grunt.file.copy(filepath, this.mainDir + "/" + this.dir + "/" + (subdir ? subdir + "/" : "") + filename);
-        }
+        grunt.file.recurse(options.slides, copyFiles.bind({ dir: options.slides, mainDir: options.temp }));
 
-        function createBuild() {
+    }
 
-            var files = {};
+    function copyFiles(filepath, rootDir, subdir, filename) {
+        grunt.file.copy(filepath, this.mainDir + "/" + this.dir + "/" + (subdir ? subdir + "/" : "") + filename);
+    }
 
-            files[options.build + "/index.html"] = options.temp + "/index.jade"
+    function createBuild() {
 
-            grunt.config.set("jade.compile.files", files);
-            grunt.task.run("jade");
-        }
+        var files = {};
 
-        function deleteDir(directory) {
-            grunt.file.delete(directory);
-        }
+        files[options.build + "/index.html"] = options.temp + "/index.jade"
 
-    });
+        grunt.config.set("jade.compile.files", files);
+        grunt.task.run("jade");
+    }
+
+    function deleteDir(directory) {
+        grunt.file.delete(directory);
+    }
 }
