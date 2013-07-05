@@ -2,6 +2,7 @@
 
 module.exports = function(grunt) {
 
+    // TODO: normalize file paths
     // __dirname is the current directory
     var _ = grunt.util._,
         localRoot = __dirname + "/../",
@@ -12,72 +13,104 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-reveal-jade/node_modules/grunt-contrib-jade');
     grunt.loadNpmTasks('grunt-reveal-jade/node_modules/grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-reveal-jade/node_modules/grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-reveal-jade/node_modules/grunt-open');
 
-    registerGruntTasks();
+    // Tasks ------------------------------------------------------------------------------
 
-    function registerGruntTasks() {
+    grunt.registerMultiTask("reveal", "Turn Jade templates into RevelJS slides", function() {
 
-        grunt.registerMultiTask("reveal", "Turn Jade templates into RevelJS slides", function() {
+        var tasks = [];
 
-            options = this.options({
-                slides: "slides",
-                build: "build",
-                temp: "temp",
-                cleanBuild: true
-            });
-            // The jade file we use to create the slide show
-            slides = _.template(index, {slides:options.slides + "/slides.jade"});
+        options = this.options({
+            slides: "slides",
+            build: "build",
+            temp: "temp",
+            cleanBuild: true,
+            livereload: true
+        });
 
-            // TODO: normalize file paths
-            if (grunt.file.isDir(options.build) && options.cleanBuild) {
+        // The jade file we use to create the slide show
+        slides = _.template(index, {
+            slides:options.slides + "/slides.jade"
+        });
 
-                grunt.task.run("reveal-deleteBuild");
+        if (grunt.file.isDir(options.build) && options.cleanBuild) {
+            tasks.push("reveal-deleteBuild");
+        }
+
+        tasks = tasks.concat(["reveal-createBuild", "reveal-deleteTemp"]);
+
+        if (options.livereload) {
+            tasks = tasks.concat(["reveal-server", "reveal-beginWatch"]);
+        }
+
+        grunt.task.run(tasks);
+    });
+
+    // Creating a series of tasks and running them is the easiest way to handle
+    // async things running in series
+    grunt.registerTask("reveal-deleteTemp", function() {
+        deleteDir(options.temp);
+    });
+
+    grunt.registerTask("reveal-deleteBuild", function() {
+        deleteDir(options.build);
+    });
+
+    grunt.registerTask("reveal-createBuild", function() {
+
+        grunt.file.write(options.temp + "/index.jade", slides);
+
+        copyModuleDirectories(["templates"], options.temp);
+        copyModuleDirectories(["css", "img", "js", "lib"], options.build);
+        copySlidesToTempDir();
+        createBuild();
+    });
+
+    grunt.registerTask("reveal-beginWatch", function() {
+
+        var watch = {
+            options: {
+                // Start a live reload server on the default port: 35729
+                livereload: true,
+                // We have to keep the same context
+                nospawn: true
+            },
+            jade: {
+                files: [options.slides + '/*.jade'],
+                tasks: ["reveal-createBuild", "reveal-deleteTemp"]
             }
-            grunt.task.run("reveal-createBuild");
-            grunt.task.run("reveal-deleteTemp");
-            grunt.task.run("reveal-beginWatch");
+        };
 
-        });
+        grunt.config.set("reveal-createBuild", {});
+        grunt.config.set("watch", watch);
+        grunt.task.run("watch");
+    });
 
-        // Creating a series of tasks and running them is the easiest way to handle
-        // async things running in series
-        grunt.registerTask("reveal-deleteTemp", function() {
-            deleteDir(options.temp);
-        });
+    grunt.registerTask("reveal-server", function() {
 
-        grunt.registerTask("reveal-deleteBuild", function() {
-            deleteDir(options.build);
-        });
-
-        grunt.registerTask("reveal-createBuild", function() {
-
-            grunt.file.write(options.temp + "/index.jade", slides);
-
-            copyModuleDirectories(["templates"], options.temp);
-            copyModuleDirectories(["css", "img", "js", "lib"], options.build);
-            copySlidesToTempDir();
-            createBuild();
-        });
-
-        grunt.registerTask("reveal-beginWatch", function() {
-
-            var watch = {
-                options: {
-                    // Start a live reload server on the default port: 35729
-                    livereload: true,
-                    nospawn: true
-                },
-                jade: {
-                    files: [options.slides + '/*.jade'],
-                    tasks: ["reveal-createBuild", "reveal-deleteTemp"]
+        // TODO: pass through reveal lr and open options here
+        var connect = {
+                livereload : {
+                    options : {
+                        port       : 9001,
+                        hostname: 'localhost',
+                        base       : './' + options.build
+                    }
+                }
+            },
+            open = {
+                reload : {
+                    path : 'http://' + connect.livereload.options.hostname + ':'
+                        + connect.livereload.options.port + '/'
                 }
             };
 
-            grunt.config.set("reveal-createBuild", {});
-            grunt.config.set("watch", watch);
-            grunt.task.run("watch");
-        });
-    }
+        grunt.config.set("connect", connect);
+        grunt.config.set("open", open);
+        grunt.task.run(["connect", "open"]);
+    });
 
     // Helper methods -----------------------------------------------------------------
 
@@ -106,6 +139,7 @@ module.exports = function(grunt) {
         files[options.build + "/index.html"] = options.temp + "/index.jade"
 
         grunt.config.set("jade.compile.files", files);
+        grunt.config.set("jade.compile.options.data.livereload", options.livereload);
         grunt.task.run("jade");
     }
 
