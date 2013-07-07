@@ -17,6 +17,7 @@ module.exports = function(grunt) {
             temp: "temp",
             assets: "assets",
             cleanBuild: true,
+            livereload: false,
             title: "Title",
             description: "Description",
             author: "You",
@@ -67,6 +68,7 @@ module.exports = function(grunt) {
 
         copyModuleDirectories(["templates"], options.temp);
         copyModuleDirectories(["css", "js", "lib"], options.build, "reveal");
+        copyProjectDirectories(["assets"], options.build);
         copySlidesToTempDir();
         createBuild();
     });
@@ -81,11 +83,20 @@ module.exports = function(grunt) {
         });
     }
 
+    function copyProjectDirectories(moduleDirectories, destinationDirectory, targetDirectory) {
+
+        _.forEach(moduleDirectories, function(directory) {
+
+            grunt.file.recurse((targetDirectory ? targetDirectory + "/" : "") + directory, copyFiles.bind({ mainDir: destinationDirectory, dir: directory }));
+        });
+    }
+
     function copySlidesToTempDir() {
 
         grunt.file.recurse(options.slides, copyFiles.bind({ dir: options.slides, mainDir: options.temp }));
 
     }
+
 
     function copyFiles(filepath, rootDir, subdir, filename) {
         grunt.file.copy(filepath, this.mainDir + "/" + this.dir + "/" + (subdir ? subdir + "/" : "") + filename);

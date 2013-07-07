@@ -55,12 +55,24 @@ grunt.initConfig({
 * `temp`: the directory and intermediate build is placed. This directory is created and
 deleted before the completion of the build task.
     * default: `"temp"`
+* `assets`: Directory that will be adding from your root to the build, for images, etc.
+    * default: `"assets"`
 * `cleanBuild`: a boolean indicating whether the build directory should be deleted before
 a new build.
-    * default: `"true"`
-* `livereload`: a boolean indicating whether you want slideshow to be served to
-[http://localhost:9001](http://localhost:9001), auto opened, and live reloaded upon changes
-to the slides or the Gruntfile.
+    * default: `true`
+* `livereload`: a boolean indicating whether the lr snippet script include tag included (you
+can also add the lr script via connect middleware to be less invassive to the build)
+    * default: `false`
+* `title`: The title tag for the slideshow
+* `description`: Meta tag description for the slideshow
+* `author`: Author meta for the slideshow
+* `theme`: The Reveal theme for the slideshow
+* `syntax`: The syntax highlight css for the slideshow
+
+I'll be adding more option to pass through to RevealJS. To see an example of how to hook up
+live reload with RevealJS see [this Gruntifle](https://github.com/pajtai/jsToolChain/blob/master/Gruntfile.js).
+
+I'll be adding a grunt-init with livereload options soon.
 
 ### Usage Examples
 
