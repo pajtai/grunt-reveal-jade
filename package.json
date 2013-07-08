@@ -8,7 +8,7 @@
     "url": "git://github.com/pajtai/grunt-reveal-jade.git"
   },
   "engines": {
-    "node": "~0.8.0"
+    "node": "~0.8.19"
   },
   "dependencies": {
     "underscore": "~1.3.3",
@@ -18,8 +18,12 @@
   },
   "devDependencies": {
     "matchdep": "~0.1.2",
-    "grunt": "~0.4.1",
-    "grunt-contrib-sass": "~0.4.0",
-    "grunt-contrib-jade": "~0.7.0",
-  }
+    "grunt": "~0.4.1"
+  },
+  "peerDependencies": {
+      "grunt-contrib-jade": "~0.7.0"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
 }

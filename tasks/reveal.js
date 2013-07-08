@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         target;
 
     // TODO: this should be sibling dependency
-    grunt.loadNpmTasks('grunt-reveal-jade/node_modules/grunt-contrib-jade');
+    grunt.loadNpmTasks('grunt-reveal-jade');
 
     // Tasks ------------------------------------------------------------------------------
 

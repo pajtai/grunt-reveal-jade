@@ -67,9 +67,11 @@ can also add the lr script via connect middleware to be less invassive to the bu
 * `description`: Meta tag description for the slideshow
 * `author`: Author meta for the slideshow
 * `theme`: The Reveal theme for the slideshow
+    * default: `"default"`
 * `syntax`: The syntax highlight css for the slideshow
+    * default: `"zenburn"`
 
-I'll be adding more option to pass through to RevealJS. To see an example of how to hook up
+I'll be adding more options to pass through to RevealJS. To see an example of how to hook up
 live reload with RevealJS see [this Gruntifle](https://github.com/pajtai/jsToolChain/blob/master/Gruntfile.js).
 
 I'll be adding a grunt-init with livereload options soon.
