@@ -4,8 +4,7 @@ Use server side [Jade templates](http://jade-lang.com/) to create [Reveal.js](ht
 using [Grunt](http://gruntjs.com/).
 
 The idea is that all you have to include is `grunt-reveal-jade` as a dependency, and you can
-simply create slides in a Jade file, livereload as you edit, and pick themes (and down the
-road other Reveal options) in your Gruntfile.
+simply create slides in a Jade file. Modify your Gruntfile, and you can get livereload, etc. going too.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1`
