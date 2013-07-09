@@ -16,7 +16,6 @@ module.exports = function(grunt) {
             temp: "temp",
             assets: "assets",
             cleanBuild: true,
-            livereload: false,
             title: "Title",
             description: "Description",
             author: "You",
