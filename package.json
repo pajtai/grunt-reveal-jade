@@ -1,0 +1,42 @@
+{
+  "author": {
+    "name": "Peter Ajtai"
+  },
+  "name": "grunt-reveal-jade",
+  "description": "A wrapper for RevealJS that allows you to write the slides in Jade",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pajtai/grunt-reveal-jade.git"
+  },
+  "engines": {
+    "node": "~0.8.19"
+  },
+  "dependencies": {
+    "underscore": "~1.3.3",
+    "express": "~2.5.9",
+    "socket.io": "~0.9.6",
+    "mustache": "~0.4.0"
+  },
+  "devDependencies": {
+    "matchdep": "~0.1.2",
+    "grunt": "~0.4.1"
+  },
+  "peerDependencies": {
+    "grunt-contrib-jade": "~0.7.0"
+  },
+  "keywords": [
+    "gruntplugin"
+  ],
+  "readme": "# grunt-reveal-jade\n\nUse server side [Jade templates](http://jade-lang.com/) to create [Reveal.js](http://lab.hakim.se/reveal-js/) slideshows\nusing [Grunt](http://gruntjs.com/).\n\nThe idea is that all you have to include is `grunt-reveal-jade` as a dependency, and you can\nsimply create slides in a Jade file, livereload as you edit, and pick themes (and down the\nroad other Reveal options) in your Gruntfile.\n\n## Getting Started\nThis plugin requires Grunt `~0.4.1`\n\nIf you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:\n\n```shell\nnpm install grunt-reveal-jade --save-dev\n```\n\nOnce the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:\n\n```js\ngrunt.loadNpmTasks('grunt-reveal-jade');\n```\n\nOr you can install all grunt npms using the matchdep npm and:\n\n```\nrequire('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);\n```\n\n## The \"reveal\" task\n\n### Overview\nIn your project's Gruntfile, add a section named `reveal` to the data object passed into `grunt.initConfig()`.\n\n```js\ngrunt.initConfig({\n  reveal: {\n    options: {\n      // Task-specific options go here.\n    },\n    your_target: {\n      // Target-specific file lists and/or options go here.\n    },\n  },\n})\n```\n\n### Options\n\n* `slides`: the directory you will store your Jade files in.\n    * default: `\"slides\"`\n* `build`: the directory the HTML slides we be placed into\n    * default: `\"build\"`\n* `temp`: the directory and intermediate build is placed. This directory is created and\ndeleted before the completion of the build task.\n    * default: `\"temp\"`\n* `assets`: Directory that will be adding from your root to the build, for images, etc.\n    * default: `\"assets\"`\n* `cleanBuild`: a boolean indicating whether the build directory should be deleted before\na new build.\n    * default: `true`\n* `livereload`: a boolean indicating whether the lr snippet script include tag included (you\ncan also add the lr script via connect middleware to be less invassive to the build)\n    * default: `false`\n* `title`: The title tag for the slideshow\n* `description`: Meta tag description for the slideshow\n* `author`: Author meta for the slideshow\n* `theme`: The Reveal theme for the slideshow\n    * default: `\"default\"`\n* `syntax`: The syntax highlight css for the slideshow\n    * default: `\"zenburn\"`\n\nI'll be adding more options to pass through to RevealJS. To see an example of how to hook up\nlive reload with RevealJS see [this Gruntifle](https://github.com/pajtai/jsToolChain/blob/master/Gruntfile.js).\n\nI'll be adding a grunt-init with livereload options soon.\n\n### Usage Examples\n\n#### Default Options\n\n```js\ngrunt.initConfig({\n  reveal: {\n    mySlides: {}\n  },\n})\n```\n\nTo run use `grunt reveal`\n\n## Contributing\nIn lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).\n\n## Release History\n\n\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/pajtai/grunt-reveal-jade/issues"
+  },
+  "_id": "grunt-reveal-jade@0.0.1",
+  "dist": {
+    "shasum": "4f773c50b082e718a7c9c8f0b8d3ea3028355dc9"
+  },
+  "_resolved": "git://github.com/pajtai/grunt-reveal-jade.git#60171fc45a24c64a459bde01a41e7a38015ebd05",
+  "_from": "grunt-reveal-jade@git://github.com/pajtai/grunt-reveal-jade.git#master"
+}
