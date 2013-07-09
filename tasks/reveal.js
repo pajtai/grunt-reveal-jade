@@ -8,7 +8,6 @@ module.exports = function(grunt) {
     var _ = grunt.util._,
         localRoot = __dirname + "/../",
         fs = require("fs"),
-        index = fs.readFileSync(localRoot + "index.jade").toString(),
         options,
         slides,
         defaults = {
@@ -26,8 +25,7 @@ module.exports = function(grunt) {
         },
         target;
 
-    // TODO: this should be sibling dependency
-    grunt.loadNpmTasks('grunt-reveal-jade');
+    grunt.loadNpmTasks('grunt-contrib-jade');
 
     // Tasks ------------------------------------------------------------------------------
 
@@ -37,11 +35,6 @@ module.exports = function(grunt) {
 
         target = this.target;
         options = this.options(defaults);
-
-        // The jade file we use to create the slide show
-        slides = _.template(index, {
-            slides:options.slides + "/slides.jade"
-        });
 
         if (grunt.file.isDir(options.build) && options.cleanBuild) {
             tasks.push("reveal-deleteBuild");
@@ -55,7 +48,7 @@ module.exports = function(grunt) {
     // Creating a series of tasks and running them is the easiest way to handle
     // async things running in series
     grunt.registerTask("reveal-deleteTemp", function() {
-        deleteDir(options.temp);
+       deleteDir(options.temp);
     });
 
     grunt.registerTask("reveal-deleteBuild", function() {
@@ -63,6 +56,13 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask("reveal-createBuild", function() {
+
+        var index = fs.readFileSync(localRoot + "index.jade").toString(),
+
+            // The jade file we use to create the slide show
+            slides = _.template(index, {
+                slides:options.slides + "/slides.jade"
+            });
 
         grunt.file.write(options.temp + "/index.jade", slides);
 
@@ -105,15 +105,19 @@ module.exports = function(grunt) {
     function createBuild() {
 
         var files = {},
-            variables = ["livereload", "title", "description", "author", "theme", "syntax"];
+            variables = ["livereload", "title", "description", "author", "theme", "syntax"],
+            top = fs.readFileSync(localRoot + "templates/top.html").toString(),
+            dataIn = {};
 
         files[options.build + "/index.html"] = options.temp + "/index.jade";
 
         grunt.config.set("jade.compile.files", files);
 
         _.forEach(variables, function(oneVariable) {
-            grunt.config.set("jade.compile.options.data." + oneVariable, options[oneVariable]);
+            dataIn[oneVariable] = options[oneVariable];
         });
+
+        grunt.file.write(options.temp + "/templates/top.html", _.template(top, dataIn));
 
         grunt.task.run("jade");
     }

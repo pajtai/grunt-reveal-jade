@@ -60,9 +60,6 @@ deleted before the completion of the build task.
 * `cleanBuild`: a boolean indicating whether the build directory should be deleted before
 a new build.
     * default: `true`
-* `livereload`: a boolean indicating whether the lr snippet script include tag included (you
-can also add the lr script via connect middleware to be less invassive to the build)
-    * default: `false`
 * `title`: The title tag for the slideshow
 * `description`: Meta tag description for the slideshow
 * `author`: Author meta for the slideshow
