@@ -65,8 +65,16 @@ a new build.
 * `author`: Author meta for the slideshow
 * `theme`: The Reveal theme for the slideshow
     * default: `"default"`
+    * Available themese are in `/reveal/css/theme`
 * `syntax`: The syntax highlight css for the slideshow
     * default: `"zenburn"`
+* `controls`: true
+* `progress`: true
+* `history`: true
+* `center`: true
+* `transition`: The type of transition from slide to slide. Available possibilities are:
+> default/cube/page/concave/zoom/linear/none
+    * default: default
 
 I'll be adding more options to pass through to RevealJS. To see an example of how to hook up
 live reload with RevealJS see [this Gruntifle](https://github.com/pajtai/jsToolChain/blob/master/Gruntfile.js).
@@ -86,6 +94,33 @@ grunt.initConfig({
 ```
 
 To run use `grunt reveal`
+
+### Hints
+
+Use Jade to create your slides.
+
+It's good to know that a period at the end of a line is equiavalen to a pipe at the beginning of
+the next lines. For example, here is how to do syntax highlighting:
+
+```
+section
+    pre
+        code(data-trim, contenteditable).
+            function linkify( selector ) {
+              if( supports3DTransforms ) {
+
+                var nodes = document.querySelectorAll( selector );
+
+                for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
+                  var node = nodes[i];
+
+                  if( !node.className ) ) {
+                    node.className += ' roll';
+                  }
+                };
+              }
+            }
+```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).

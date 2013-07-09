@@ -21,7 +21,13 @@ module.exports = function(grunt) {
             description: "Description",
             author: "You",
             theme: "default",
-            syntax: "zenburn"
+            syntax: "zenburn",
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            // default/cube/page/concave/zoom/linear/none
+            transition: ""
         },
         target;
 
@@ -48,7 +54,7 @@ module.exports = function(grunt) {
     // Creating a series of tasks and running them is the easiest way to handle
     // async things running in series
     grunt.registerTask("reveal-deleteTemp", function() {
-       deleteDir(options.temp);
+       //deleteDir(options.temp);
     });
 
     grunt.registerTask("reveal-deleteBuild", function() {
@@ -67,7 +73,7 @@ module.exports = function(grunt) {
         grunt.file.write(options.temp + "/index.jade", slides);
 
         copyModuleDirectories(["templates"], options.temp);
-        copyModuleDirectories(["css", "js", "lib"], options.build, "reveal");
+        copyModuleDirectories(["css", "js", "lib", "plugin"], options.build, "reveal");
         copyProjectDirectories(["assets"], options.build);
         copySlidesToTempDir();
         createBuild();
@@ -105,8 +111,10 @@ module.exports = function(grunt) {
     function createBuild() {
 
         var files = {},
-            variables = ["livereload", "title", "description", "author", "theme", "syntax"],
+        // TODO: use options directly
+            variables = ["title", "description", "author", "theme", "syntax", "controls", "progress", "history", "center", "transition"],
             top = fs.readFileSync(localRoot + "templates/top.html").toString(),
+            bottom,
             dataIn = {};
 
         files[options.build + "/index.html"] = options.temp + "/index.jade";
@@ -118,7 +126,9 @@ module.exports = function(grunt) {
         });
 
         grunt.file.write(options.temp + "/templates/top.html", _.template(top, dataIn));
-
+        top = undefined;
+        bottom = fs.readFileSync(localRoot + "templates/bottom1.html").toString();
+        grunt.file.write(options.temp + "/templates/bottom1.html", _.template(bottom, dataIn));
         grunt.task.run("jade");
     }
 
