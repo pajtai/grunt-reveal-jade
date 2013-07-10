@@ -3,10 +3,13 @@
 Use server side [Jade templates](http://jade-lang.com/) to create [Reveal.js](http://lab.hakim.se/reveal-js/) slideshows
 using [Grunt](http://gruntjs.com/).
 
-The idea is that all you have to include is `grunt-reveal-jade` as a dependency, and you can
-simply create slides in a Jade file. Modify your Gruntfile, and you can get livereload, etc. going too.
+You can create slides in a Jade file.
 
-To get a project setup with `grunt-reveal-jade`, livereload, and all the goodies use `grunt-init`
+There are two ways to use this NPM. You can use the `grunt-init` to create a project scaffolding
+with `grunt-reveal-jade` as a dependency, as well as a setup for livereload, or you can
+simply include this NPM as a dependency and build your own project.
+
+To get a project setup using `grunt-init` with `grunt-reveal-jade`:
 
 1. make sure `grunt-init` was installed globally using  
 
@@ -111,6 +114,23 @@ grunt.initConfig({
 ```
 
 To run use `grunt reveal`
+
+### Slides example
+
+You only have to write the individual sections. Use Jade to create the HTML that you would
+normally add to your RevealJS' `index.html`
+
+```
+section
+    h1 Slide 1
+    h2.fragment Subtitle!
+
+section
+    h2 Slide 2
+    pre.fragment
+        code(data-trim, contenteditable).
+            alert("Syntax highlighting!");
+```
 
 ### Hints
 
