@@ -8,15 +8,15 @@ simply create slides in a Jade file. Modify your Gruntfile, and you can get live
 
 To get a project setup with `grunt-reveal-jade`, livereload, and all the goodies use `grunt-init`
 
-1. make sure `grunt-init` was installed globally using
+1. make sure `grunt-init` was installed globally using  
 ```
 npm install -g grunt-init
 ```
-1. load the `grunt-init` template for `grunt-reveal-jade` using:
+1. load the `grunt-init` template for `grunt-reveal-jade` using:  
 ```
-git clone git@github.com:pajtai/grunt-init-reveal-jade.git ~/.grunt-init/reveal-jade
+git clone git@github.com:pajtai/grunt-init-reveal-jade.git ~/.grunt-init/reveal-jade  
 ```
-1. now setup your project scaffolding using
+1. now setup your project scaffolding using  
 ```
 grunt-init reveal-jade
 ```
