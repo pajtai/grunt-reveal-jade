@@ -16,7 +16,7 @@ npm install -g grunt-init
 ```shell
 git clone git@github.com:pajtai/grunt-init-reveal-jade.git ~/.grunt-init/reveal-jade  
 ```
-1. now setup your project scaffolding using 
+1. now setup your project scaffolding using   
 ```shell
 grunt-init reveal-jade
 ```
