@@ -62,6 +62,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask("reveal-createBuild", function() {
 
+        grunt.log.writeln("---");
         var index = fs.readFileSync(localRoot + "index.jade").toString(),
 
             // The jade file we use to create the slide show
@@ -73,7 +74,7 @@ module.exports = function(grunt) {
 
         copyModuleDirectories(["templates"], options.temp);
         copyModuleDirectories(["css", "js", "lib", "plugin"], options.build, "reveal");
-        copyProjectDirectories(["assets"], options.build);
+        copyProjectDirectories([options.assets], options.build);
         copySlidesToTempDir();
         createBuild();
     });
