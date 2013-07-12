@@ -4,7 +4,7 @@
   },
   "name": "grunt-reveal-jade",
   "description": "A wrapper for RevealJS that allows you to write the slides in Jade",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "repository": {
     "type": "git",
     "url": "git://github.com/pajtai/grunt-reveal-jade.git"
